@@ -1,0 +1,453 @@
+% !TeX program = pdfLaTeX -shell-escape
+% !TeX encoding = UTF-8
+
+\nonstopmode
+\overfullrule=10pt
+
+\documentclass[a4paper,11pt,twoside]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[english,italian]{babel}
+
+\usepackage{fourier}
+\usepackage[scaled=0.84]{beramono}
+\renewcommand\sfdefault{iwona}
+
+\usepackage{caption}
+\usepackage{enumitem}
+\usepackage{tabularx,array,booktabs}
+\usepackage[fleqn]{amsmath}
+\usepackage{listings}
+\usepackage[svgnames]{xcolor}
+\usepackage{graphicx}
+\usepackage[figuresright]{rotating}
+\usepackage{hyperref}
+\usepackage{pgffor}
+\usepackage[italian]{varioref}
+\usepackage{microtype}
+\usepackage{tikz}
+
+
+\frenchspacing
+\captionsetup{labelfont={bf,sf},font=small,format=hang,textformat=period}
+\captionsetup[table]{position=above}
+\setlist{noitemsep}
+\hypersetup{bookmarksopen, pdfstartview={XYZ null null 0.9}}
+\hypersetup{colorlinks, urlcolor=Maroon, linkcolor=blue}
+
+\usetikzlibrary{shapes,fadings,arrows,backgrounds,chains,calc,positioning}
+\usetikzlibrary{decorations.pathreplacing,decorations.markings,matrix,fit}
+\usetikzlibrary{shapes.gates.logic.US,shapes.gates.logic.IEC,calc}
+\tikzstyle{branch}=[fill,shape=circle,minimum size=3pt,inner sep=0pt]
+\tikzstyle{dot}=[fill,black,shape=circle,inner sep=1pt]
+
+\newcommand*\file{\texttt}
+\newcommand*\meta[1]{$\langle$\emph{#1}$\rangle$}
+\newcommand\code{\lstinline[basicstyle=\normalsize\ttfamily]}
+\lstset{language=VHDL, escapeinside=`'}
+\lstset{literate={à}{{\`a}}1 {è}{{\`e}}1 {ì}{{\`i}}1 {ò}{{\`o}}1 {ù}{{\`u}}1}
+\lstset{belowcaptionskip=4pt}
+\lstset{basicstyle=\footnotesize\ttfamily, tabsize=4, showstringspaces=false}
+\lstset{frameround=fttt, frame=trb}
+\addto\captionsitalian{\renewcommand*\lstlistingname{Listato}}
+
+\lstdefinelanguage{VHDL}{
+  morekeywords=[1]{
+    all,component,constant,for,else,elsif,entity,generic,if,is,loop,downto,port,in,out,end,architecture,of,
+    begin,and,map,not,others,process,signal,then,xor,library,use,variable
+  },
+  morekeywords=[2]{
+    integer,std_logic_vector,std_logic,positive,time,unsigned
+  },
+  morekeywords=[3]{
+    to_unsigned
+  },
+  morecomment=[l][\color{green!45!black}]{--},
+}
+\colorlet{keyword1}{blue!50!black!80}
+\colorlet{keyword2}{blue!70!black!90}
+\colorlet{keyword3}{yellow!40!red!90}
+\colorlet{comment}{green!90!black!90}
+\lstdefinestyle{vhdl}{
+  language     = VHDL,
+  keywordstyle = [1]\color{keyword1}\bfseries,
+  keywordstyle = [2]\color{keyword2},
+  keywordstyle = [3]\color{keyword3},
+}
+
+\expandafter\def\expandafter\UrlBreaks\expandafter{\UrlBreaks%
+  \do\a\do\b\do\c\do\d\do\e\do\f\do\g\do\h\do\i\do\j%
+  \do\k\do\l\do\m\do\n\do\o\do\p\do\q\do\r\do\s\do\t%
+  \do\u\do\v\do\w\do\x\do\y\do\z\do\A\do\B\do\C\do\D%
+  \do\E\do\F\do\G\do\H\do\I\do\J\do\K\do\L\do\M\do\N%
+  \do\O\do\P\do\Q\do\R\do\S\do\T\do\U\do\V\do\W\do\X%
+  \do\Y\do\Z%
+  \do\0\do\1\do\2\do\3\do\4\do\5\do\6\do\7\do\8\do\9}
+
+\DeclareMathOperator{\xor}{xor}
+
+\makeatletter
+% vref (cliccabili solo i numeri e non il testo)
+\AtBeginDocument{
+  \def\vr@f#1{%
+    \leavevmode\unskip\vref@space
+    \begingroup
+%   \let\T@pageref\@pagerefstar
+    \hyperref[{#1}]{\ref*{#1}}%
+    \vpageref[\unskip]{#1}%
+    \endgroup
+  }
+}
+\vref@addto\extrasitalian{%
+  \def\reftextfaceafter{\reftextvario{a fronte}{a pagina seguente}}%
+  \def\reftextfaraway#1{a pagina~\pageref{#1}}%
+  \def\reftextafter{a pagina seguente}%
+}
+\makeatother
+
+\makeatletter
+\pagestyle{myheadings}
+\def\leftpagehead{Progetto di Apparati Elettronici\hskip0.6em--\hskip0.6em
+  Antonio Macrì}
+\def\sectionmark#1{%
+  \markboth {\leftpagehead}{\ifnum \c@secnumdepth >\z@
+    \thesection.\hskip0.6em
+  \fi #1}}
+\def\subsectionmark#1{%
+  \markboth {\leftpagehead}{\ifnum \c@secnumdepth >\@ne
+    \thesubsection.\hskip0.6em
+  \fi #1}}
+\makeatother
+
+
+\title{\emph{Transcodificatore Gray-Binary}\texorpdfstring{\\}{}\vskip2ex
+       \Large Progetto di Apparati Elettronici}
+\author{Antonio Macrì}
+\def\day{15}
+\def\month{7}
+\def\year{2014}
+
+\begin{document}
+\maketitle
+\vspace*{\stretch{1}}
+\tableofcontents
+\vspace*{\stretch{3}}
+\null
+\clearpage
+
+
+
+\section{\textsl{Specifiche}}
+
+\begingroup
+\slshape
+
+\subsection{Struttura generale}
+
+Si progetti un circuito sequenziale sincrono in grado di leggere una parola di lunghezza pari a 4~bit che esprime un numero binario, la traduca in una parola espressa in codifica Gray.
+
+Tutti gli elementi con memoria siano inizializzabili al valore logico 0 tramite il segnale \code|RST_N| (attivo basso).
+
+\subsection{Consegna}
+La relazione finale del progetto deve contenere:
+\begin{itemize}
+\item Introduzione (descrizione algoritmo, possibili applicazioni, possibili architetture, etc.)
+\item Descrizione dell’architettura (diagramma a blocchi, ingressi/uscite, etc.)
+\item Codice VHDL (con commenti dettagliati)
+\item Testbench per la verifica
+\item Conclusioni
+\end{itemize}
+
+\endgroup
+
+
+\section{Introduzione}
+
+I codici di Gray sono usati per codificare sequenze ordinate di numeri, in modo tale che un numero della sequenza differisca dal successivo (o dal precedente) per il valore di un solo bit. Non si tratta di un codice posizionale, ovvero non è assegnato ai bit alcun peso a seconda della loro posizione.
+
+Data una sequenza ordinata di numeri, non esiste per essi una codifica univoca di codici di Gray. Un modo semplice per generare una sequenza di codici di Gray, a partire da una sequenza numerica binaria, è descritto dal seguente algoritmo:
+%
+\begin{enumerate}
+\item siano
+  \[ b = b_{N-1}\dots b_0   \qquad \text { e } \qquad g = g_{N-1}\dots g_0 \]
+i due valori rispettivamente in ingresso (un numero intero espresso in codifica binaria) e in uscita (il rispettivo codice di Gray);
+\item si copia il bit più significativo dell'ingresso in uscita:
+  \[ g_{N-1} = b_{N-1}; \]
+\item per ciascun bit seguente $g_i$ si calcola
+  \[ g_i = b_{i+1} \xor b_i. \]
+\end{enumerate}
+
+Nel listato~\ref{lst:pseudo-code} viene mostrato lo pseudo-codice equivalente per la conversione di un numero su 4~bit. Con \texttt{b[i]} e \texttt{g[i]} si accede ai singoli bit dei due codici.
+
+\begin{table}
+\centering\small
+\caption{Conversione tra codice binario e codice di Gray}
+\label{tab:binary-to-gray}
+\begin{tabular}{>{\bfseries}lc*{7}{@{\hskip.5em}>\ttfamily c}}
+\toprule
+Binary code &
+  000 & 001 & 010 & 011 & 100 & 101 & 110 & 111 \\
+Gray code &
+  000 & 001 & 011 & 010 & 110 & 111 & 101 & 100 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{lstlisting}[
+  caption={Algoritmo di conversione di un numero binario a 4~bit in codifica di Gray},
+  label=lst:pseudo-code,
+  language=C,
+]
+g[3] = b[3];
+for (i = 2; i >= 0; i--) {
+  g[i] = b[i + 1] ^ b[i];
+}
+\end{lstlisting}
+
+
+\subsection{Possibili usi}
+
+I codici di Gray sono ampiamente usati in tutti quei contesti in cui è necessario eseguire un \emph{mapping} tra un valore analogico (che può variare continuamente entro un certo intervallo) e un valore digitale (costituito da una sequenza di bit di una certa lunghezza). Essi sono spesso usati nel campo delle comunicazioni digitali, al fine di minimizzare gli errori su bit e rendere più efficaci i meccanismi di rilevazione e correzione degli errori.
+
+In un sistema di comunicazione PAM $M$-ario (in banda base), per esempio, la codifica di Gray viene usata per associare una sequenza di bit ($\log_2 M$~bit) a ciascuno degli $M$~simboli dell'alfabeto. Così facendo, i livelli adiacenti corrispondono a parole di codice che differiscono per un solo bit, con il vantaggio che un errore del decisore (che solitamente accade tra due livelli adiacenti) comporta un errore su un solo bit. Ciò consente di rendere più probabile la correzione dell'errore con opportuni meccanismi.
+
+Un altro contesto di applicazione della codifica di Gray si ha quando è necessario evitare alee (\emph{glitch}) dovute alla commutazione di più bit in un circuito, per esempio in uscita a un sensore. Essendo improbabile, a causa delle imperfezioni e asimmetrie nei circuiti, che due o più bit di una cifra possano commutare esattamente nello stesso istante, viene a crearsi una configurazione fisica intermedia in cui è codificato un valore indesiderato, che può generare errore nella successiva elaborazione. Negli encoder che utilizzano codici di Gray, il passaggio da un valore a quello immediatamente più piccolo o più grande comporta la variazione di un unico bit, eliminando errori dovuti a codifiche binarie intermedie.
+
+
+\subsection{Schema a blocchi e realizzazione}
+
+La figura~\vref{fig:schema-blocchi} riporta lo schema a blocchi del codificatore progettato. Si tratta di un circuito sincrono, la cui evoluzione è dettata dal segnale di \emph{clk}. In ingresso viene data una parola $b$ di $N$~bit contenente un numero naturale con codifica binaria. L'uscita $g$ conterrà, \emph{al ciclo di clock successivo}, un codice di Gray corrispondente alla valore dato in ingresso secondo un mapping analogo a quello riportato nella tabella~\vref{tab:binary-to-gray} (esteso su $N$~bit). In ingresso alla rete viene data anche la linea di reset (attiva bassa), in modo da forzare l'uscita a zero quando attiva.
+
+\begin{figure}
+\centering
+\begin{tikzpicture}
+  \node[rectangle,draw, align=center, minimum width=7em, minimum height=15ex]
+    (bin2gray) { Binary\\ to\\Gray };
+  \draw[stealth-] ($(bin2gray.north west)!0.5!(bin2gray.south west)$) --
+    node[rotate=60]{\footnotesize\rule{1ex}{0.4pt}} node[above]{$N$}
+    +(-3em,0) node[dot]{} node[anchor=east]{$b$};
+  \draw[stealth-] ($(bin2gray.south west)!0.3!(bin2gray.south east)$) -- +(0, -3ex)
+    node[dot]{} node[anchor=north]{\textit{clk}};
+  \draw[stealth-] ($(bin2gray.south west)!0.7!(bin2gray.south east)$) -- +(0, -3ex)
+    node[dot]{} node[anchor=north]{\textit{/reset\vphantom{clk}}};
+  \draw ($(bin2gray.north east)!0.5!(bin2gray.south east)$) --
+    node[rotate=60]{\footnotesize\rule{1ex}{0.4pt}} node[above]{$N$}
+    +(+3em,0) node[dot]{} node[anchor=west]{$g$};
+\end{tikzpicture}
+\caption{Schema a blocchi del convertitore binario/Gray}
+\label{fig:schema-blocchi}
+\end{figure}
+
+L'implementazione del transcodificatore può essere realizzata mediante un certo numero di porte XOR connesse come illustrato nella figura~\ref{fig:implementation-binary-gray} ($N=4$), in accordo all'algoritmo in pseudo-codice già visto (listato~\vref{lst:pseudo-code}).
+
+\begin{figure}[t!]
+\centering
+\begin{tikzpicture}[label distance=2mm]
+  \coordinate (b3);
+  \coordinate[right=14em of b3] (g3);
+  \draw (b3) node[dot]{} node[anchor=east]{$b_3$} --
+        (g3) node[dot]{} node[anchor=west]{$g_3$};
+  \edef\lasti{3}
+  \foreach \i [remember=\i as \lasti] in {2,1,0} {
+    \coordinate[below=3.5ex of g\lasti] (g\i);
+    \node[draw, xor gate US, logic gate inputs=nn]
+      at ($(g\i)!0.50!(b\lasti |- g\i)$) (xor\i) {};
+    \coordinate (b\i) at (xor\i.input 2 -| b\lasti);
+    \draw (xor\i.output) -- (g\i) node[dot]{} node[anchor=west]{$g_\i$};
+    \draw (xor\i.input 1) -| ($(b\lasti)+(3em,0)$) node[dot] {};
+    \draw (xor\i.input 2) -- (b\i) node[dot]{} node[anchor=east]{$b_\i$};
+  }
+\end{tikzpicture}
+\caption{Realizzazione di un convertitore binario/Gray a 4~bit}
+\label{fig:implementation-binary-gray}
+\end{figure}
+
+Nella figura~\ref{fig:implementation-gray-binary} è riportata l'implementazione di un convertitore inverso da codici di Gray a codici binari. Come si evince dallo schema, anche in questo caso la realizzazione in termini di porte logiche è piuttosto semplice.
+
+\begin{figure}[t!]
+\centering
+\begin{tikzpicture}[label distance=2mm]
+  \coordinate (g3);
+  \coordinate[right=14em of b3] (b3);
+  \draw (g3) node[dot]{} node[anchor=east]{$g_3$} --
+        (b3) node[dot]{} node[anchor=west]{$b_3$};
+  \edef\lasti{3}
+  \foreach \i [remember=\i as \lasti] in {2,1,0} {
+    \coordinate[below=3.5ex of b\lasti] (b\i);
+    \node[draw, xor gate US, logic gate inputs=nn]
+      at ($(b\i)!{(1+\i)*0.3-0.1}!(g\lasti |- b\i)$) (xor\i) {};
+    \coordinate (g\i) at (xor\i.input 2 -| g\lasti);
+    \draw (xor\i.output) -- (b\i) node[dot]{} node[anchor=west]{$b_\i$};
+    \draw (xor\i.input 2) -- (g\i) node[dot]{} node[anchor=east]{$g_\i$};
+    \edef\x{3}\ifx\lasti\x
+      \draw (xor\i.input 1) -| ($(g3)+(1em,0)$) node[dot] {};
+    \else
+      \draw (xor\i.input 1) -| ($(xor\lasti.output)+(1em,0)$) node[dot] {};
+    \fi
+  }
+\end{tikzpicture}
+\caption{Realizzazione di un convertitore Gray/binario a 4~bit}
+\label{fig:implementation-gray-binary}
+\end{figure}
+
+
+
+\section{Codice VHDL}
+
+I listati che seguono mostrano per intero il codice VHDL del transcodificatore da codice binario in Gray e viceversa. Si è scelto una implementazione di tipo \emph{behavioural}, in quanto è la notazione più compatta e di alto livello e, di conseguenza, quella meno incline a errori.
+
+\subsection{\texttt{binary\_to\_gray.vhdl}}
+\lstinputlisting[style=vhdl]{../vhdl/binary_to_gray.vhdl}
+
+\subsection{\texttt{gray\_to\_binary.vhdl}}
+\lstinputlisting[style=vhdl]{../vhdl/gray_to_binary.vhdl}
+
+
+\section{Testbench}
+
+In questo paragrafo vengono presentati i testbench usati per la verifica e la simulazione dei due transcodificatori diretto e inverso esposti nei paragrafi precedenti. 
+
+\begin{figure}[t]
+\centering
+\begin{tikzpicture}
+  % Binary to Gray
+  \node[rectangle, draw, align=center, minimum width=5em, minimum height=12ex]
+    (bin2gray) {Binary\\ to\\Gray};
+  \draw[stealth-] (bin2gray.south) -- +(0, -3ex)
+    node[dot]{} node[anchor=north]{\textit{/reset}};
+  % reg1
+  \node[draw, black, minimum width=2em, minimum height=12ex, right=4em of bin2gray] (reg1) {};
+  \draw[gray] (reg1.north) -- (reg1.south);
+  % xor
+  \node[draw, xor gate US, logic gate inputs=nn, anchor=west]
+    at ($(reg1.east)+(4em,0)$) (xor) {};
+  % R1 and R2
+  \node[rectangle, draw, minimum width=3em, minimum height=8ex, left=3em of bin2gray]
+    (r1) {$R_1$};
+  \node[rectangle, draw, minimum width=3em, minimum height=8ex, right=2em of xor]
+    (r2) {$R_2$};
+  % lines
+  \draw[-stealth] (r1) --
+    node[rotate=60]{\footnotesize\rule{1ex}{0.4pt}} node[above]{$4$} node[below]{$b$}
+    (bin2gray.west);
+  \draw[-stealth] (bin2gray.east) --
+    node[rotate=60]{\footnotesize\rule{1ex}{0.4pt}} node[above]{$4$} node[below]{$g$} (reg1);
+  \draw[-stealth] ($(bin2gray.east)!0.75!(reg1.west)$) node[dot]{} |-
+    ($(reg1.south west)+(0,-1em)$) -| ($(xor.input 2)+(-1em,0)$) -- (xor.input 2);
+  \draw[-stealth] (reg1.east |- xor.input 1) --
+    node[rotate=60]{\footnotesize\rule{1ex}{0.4pt}} node[above]{$4$} node[below]{$g'$}
+    (xor.input 1);
+  \draw[-stealth] (xor) --
+    node[rotate=60]{\footnotesize\rule{1ex}{0.4pt}} node[above]{$4$} node[below]{$x$}
+    (r2);
+  \draw (r2) -- +(+3em,0) node[dot]{} node[anchor=west]{\textit{result}};
+  \coordinate (clk) at ($(r1.west |- bin2gray.north)+(-1em,1.5em)$);
+  \draw[-stealth] (clk) node[dot]{} node[anchor=east]{\textit{clk}} -| (reg1.north);
+  \draw[stealth-] (r1.north) -- (clk -| r1.north) node[dot]{};
+  \draw[stealth-] (bin2gray.north) -- (clk -| bin2gray.north) node[dot]{};
+\end{tikzpicture}
+\caption{Schema del primo testbench per la verifica e la simulazione del transcodificatore per codice binario/Gray}
+\label{fig:testbench-binary-to-gray}
+\end{figure}
+
+\begin{figure}
+\centering
+\begin{tikzpicture}
+  % Binary to Gray
+  \node[rectangle, draw, align=center, minimum width=5em, minimum height=12ex]
+    (bin2gray) {Binary\\ to\\Gray};
+  \node[rectangle, draw, align=center, minimum width=5em, minimum height=12ex,
+    right=3em of bin2gray]
+    (gray2bin) {Gray\\ to\\ Binary};
+  \draw[stealth-] (bin2gray.south) -- +(0, -3ex)
+    node[dot]{} node[anchor=north]{\textit{/reset}};
+  \draw[stealth-] (gray2bin.south) -- +(0, -3ex)
+    node[dot]{} node[anchor=north]{\textit{/reset}};
+  % reg1
+  \node[draw, black, minimum width=2em, minimum height=4em, below=4em of bin2gray] (reg1) {};
+  \node[draw, black, minimum width=2em, minimum height=4em, below=4em of gray2bin] (reg2) {};
+  \draw[gray] (reg1.north) -- (reg1.south);
+  \draw[gray] (reg2.north) -- (reg2.south);
+  % R1 and R2
+  \node[rectangle, draw, minimum width=3em, minimum height=8ex, left=3em of bin2gray]
+    (r1) {$R_1$};
+  \node[rectangle, draw, minimum width=3em, minimum height=8ex, right=3em of gray2bin]
+    (r3) {$R_3$};
+  % lines
+  \draw[-stealth] (r1) --
+    node[rotate=60]{\footnotesize\rule{1ex}{0.4pt}} node[above]{$4$} node[below]{$b$}
+    (bin2gray.west);
+  \draw[-stealth] (bin2gray.east) --
+    node[rotate=60]{\footnotesize\rule{1ex}{0.4pt}} node[above]{$4$} node[below]{$g$}
+    (gray2bin.west);
+  \coordinate (r3input1) at ($(r3.north west)!0.35!(r3.south west)$);
+  \coordinate (r3input2) at ($(r3.north west)!0.65!(r3.south west)$);
+  \draw[-stealth] (gray2bin.east |- r3input1) --
+    node[rotate=60]{\footnotesize\rule{1ex}{0.4pt}} node[above]{$4$} node[below]{$b'$}
+    (r3input1);
+  \coordinate (p) at ($(gray2bin.east)!0.75!(r3input1)$);
+  \draw[-stealth] (reg2.east) -| (p |- r3input2) -- (r3input2);
+  \draw[-stealth] ($(r1.east)!0.75!(bin2gray.west)$) node[dot]{} |- (reg1.west);
+  \draw[-stealth] (reg1) --
+    node[rotate=60]{\footnotesize\rule{1ex}{0.4pt}} node[above]{$4$} (reg2);
+  \draw (r3) -- +(+3em,0) node[dot]{} node[anchor=west]{\textit{result}};
+  \coordinate (clk) at ($(r1.west |- bin2gray.north)+(-2em,1.5em)$);
+  \draw[-stealth] (clk) node[dot]{} node[anchor=east]{\textit{clk}} -| (gray2bin.north);
+  \draw[stealth-] (r1.north) -- (clk -| r1.north) node[dot]{};
+  \draw[stealth-] (bin2gray.north) -- (clk -| bin2gray.north) node[dot]{};
+  \draw[-stealth] ($(clk)+(1em,0)$) node[dot]{} |- ($(reg1.south)+(0,-1.5em)$) -| (reg2.south);
+  \draw[-stealth] ($(reg1.south)+(0,-1.5em)$) node[dot]{} -- (reg1.south);
+\end{tikzpicture}
+\caption{Schema del secondo testbench per la verifica e la simulazione del transcodificatore per codice binario/Gray}
+\label{fig:testbench-gray-to-binary}
+\end{figure}
+
+Per la verifica e la simulazione, sono stati progettati due testbench:
+\begin{enumerate}
+\item il primo verifica che l'output del convertitore binario/Gray generi in uscita una sequenza di codici che rispettino effettivamente una codifica di Gray, ossia tale per cui due elementi consecutivi della sequenza differiscano esattamente per un solo bit;
+\item il secondo testbench verifica che il transcodificatore da codice binario a codice di Gray e quello da codice di Gray a codice binario siano effettivamente l'uno l'inverso dell'altro, ovvero che il secondo permetta di risalire al codice binario originario a partire dal codice di Gray generato dal primo.
+\end{enumerate}
+
+Le figure~\ref{fig:testbench-binary-to-gray} e~\ref{fig:testbench-gray-to-binary} ne illustrano il funzionamento.
+
+Per quanto riguarda il primo testbench, la rete $R_1$ è un circuito sequenziale sincrono che genera in uscita, a ogni ciclo di clock, un numero naturale $b$ su 4~bit in codifica binaria. Al successivo ciclo di clock, il convertitore \texttt{B2G} produrrà in uscita ($g$) il corrispondente codice di Gray. Quest'ultimo viene fatto passare attraverso un registro al fine di ritardarlo di un ciclo di clock: in questo modo è possibile confrontare ciascun codice prodotto con il precedente. La serie costituita dallo XOR e dalla rete $R_2$ serve a controllare che i due codici $g'$ e $g$ differiscano per un solo bit. Affinché tutto funzioni, l'uscita $x$ dello XOR deve essere una sequenza di bit costituita da tutti 0 tranne uno e un solo bit posto a~1. Ciò significa che $x$ è una potenza di 2: in tal caso, per verificarlo bisogna controllare che
+\[
+  x \mathbin{\mathrm{xor}} (x-1) = 0.
+\]
+Tuttavia, siccome $x=0$ ricade in questa condizione pur non essendo un valore valido (significherebbe che due codici di Gray generati consecutivi sono uguali), bisogna accertarsi anche che sia $x\neq0$.
+
+Il secondo testbench è orientato alla verifica dell'invertibilità della conversione. In gran parte riusa il codice del testbench precedente. La differenza fondamentale è che la rete $R_3$ deve controllare che le due sequenze in ingresso $b'$ e $b$ siano esattamente uguali. Inoltre, i due registri in basso servono a ritardare l'ingresso in modo da allinearlo all'uscita del convertitore \texttt{G2B}.
+
+Nei paragrafi seguenti viene riportato per intero il codice VHDL commentato dei due testbench.
+
+
+\subsection{\texttt{binary\_to\_gray\_test.vhdl}}
+\lstinputlisting[style=vhdl]{../vhdl/binary_to_gray_test.vhdl}
+
+\subsection{\texttt{gray\_to\_binary\_test.vhdl}}
+\lstinputlisting[style=vhdl]{../vhdl/gray_to_binary_test.vhdl}
+
+
+\subsection{Simulazione}
+
+I due testbench già esposti sono stati simulati usando il tool Active-HDL della Aldec. Le figure~\ref{fig:first-simulation} e~\ref{fig:second-simulation} riportano i diagrammi temporali ottenuti.
+
+Nel primo diagramma, si nota la tipica forma d'onda di una sequenza di bit che varia secondo un codice di Gray (termini \texttt{gray[\textit{i}]}). In entrambi le figure è possibile verificare l'output \texttt{result} costantemente uguale a 1, a segnalare la correttezza dei risultati.
+
+\begin{sidewaysfigure}
+\centering
+\includegraphics[width=\textwidth]{sim-bin2gray}
+\caption{Simulazione del primo testbench usando il tool Active-HDL}
+\label{fig:first-simulation}
+\end{sidewaysfigure}
+
+\begin{sidewaysfigure}
+\centering
+\includegraphics[width=\textwidth]{sim-gray2bin}
+\caption{Simulazione del secondo testbench usando il tool Active-HDL}
+\label{fig:second-simulation}
+\end{sidewaysfigure}
+
+
+\end{document}
